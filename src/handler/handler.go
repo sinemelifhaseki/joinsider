@@ -110,3 +110,33 @@ func DeleteTeam(db *sql.DB) echo.HandlerFunc {
         }
     }
 }
+
+/*         MATCH       */
+func DistributeFixture(db *sql.DB) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        league_id, _ := strconv.Atoi(c.Param("league_id"))
+        err := models.DistributeFixture(db, league_id)
+        if err == nil {
+            return c.JSON(http.StatusCreated, H{
+                "okStatus": 0,
+            })
+        } else {
+            return err
+        }
+	}
+}
+
+func PlayOneWeek(db *sql.DB, week int) echo.HandlerFunc {
+    return func(c echo.Context) error {
+        league_id, _ := strconv.Atoi(c.Param("league_id"))
+        err := models.PlayOneWeek(db, week, league_id)
+        if err == nil {
+            return c.JSON(http.StatusCreated, H{
+                "okStatus": 0,
+            })
+        } else {
+            return err
+        }
+	}
+}
+

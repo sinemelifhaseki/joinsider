@@ -240,11 +240,11 @@ func CreateMatch(db *sql.DB, week int,team1 Team, team2 Team) (int64, error) {
     return result.LastInsertId()
 }
 
-func DistributeFixture(db *sql.DB, league_id int){ // I configured the league fixed as 6 weeks since there are 4 teams in leagues. However it can be changed due to the expected outcome
+func DistributeFixture(db *sql.DB, league_id int) error { // I configured the league fixed as 6 weeks since there are 4 teams in leagues. However it can be changed due to the expected outcome
 	//rand.Seed(time.Now().UnixNano()) teams or weeks can be determined randomly,
 	//for the sake of simplicity it's kind of hardcoded right now
 	Teams := GetTeams(db, league_id)
-	CreateMatch(db, 1, Teams.Teams[3], Teams.Teams[0])
+	_, err := CreateMatch(db, 1, Teams.Teams[3], Teams.Teams[0])
 	CreateMatch(db, 1, Teams.Teams[1], Teams.Teams[0])
 	CreateMatch(db, 2, Teams.Teams[2], Teams.Teams[3])
 	CreateMatch(db, 2, Teams.Teams[1], Teams.Teams[2])
@@ -256,10 +256,10 @@ func DistributeFixture(db *sql.DB, league_id int){ // I configured the league fi
 	CreateMatch(db, 5, Teams.Teams[0], Teams.Teams[2])
 	CreateMatch(db, 6, Teams.Teams[2], Teams.Teams[0])
 	CreateMatch(db, 6, Teams.Teams[3], Teams.Teams[2])
-	
+	return err
 }
 
-func PlayOneWeek(db *sql.DB, week int){
+func PlayOneWeek(db *sql.DB, week int, league_id int) error {
 	sql := "SELECT * FROM matches WHERE week = " + strconv.Itoa(week)
 	rows, err := db.Query(sql)
     // Exit if the SQL doesn't work for some reason
@@ -308,6 +308,7 @@ func PlayOneWeek(db *sql.DB, week int){
             panic(err2)
 		}
 	}
+	return err
 }
 
 	//PlayAll(db))
