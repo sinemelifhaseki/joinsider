@@ -269,7 +269,6 @@ func PlayOneWeek(db *sql.DB, week int){
     // make sure to cleanup when the program exits
 	defer rows.Close()
 
-    result := MatchCollection{}
     for rows.Next() {
         match := Match{}
 		err2 := rows.Scan(&match.ID, &match.Week, &match.HomeTeamID, &match.AwayTeamID, &match.HomeTeamScore, &match.AwayTeamScore, &match.IsPlayed)
@@ -303,9 +302,8 @@ func PlayOneWeek(db *sql.DB, week int){
         if err2 != nil {
             panic(err2)
 		}
+	}
 }
-        result.Teams = append(result.Teams, team)
-    }
-}
-	PlayAll(db))
-	PredictLeaders(db))
+
+	//PlayAll(db))
+	//PredictLeaders(db))
